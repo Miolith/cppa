@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# Vim
+*.swp
+
 # Trash
 .idea
 cmake-build-debug
