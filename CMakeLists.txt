@@ -9,7 +9,7 @@ add_compile_options(-W -Wall -Werror -std=c++20)
 
 
 ## MAIN library
-add_library(cppa src/image.cpp)
+add_library(cppa src/image.cpp src/firstVersion.cpp)
 target_include_directories(cppa PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 

@@ -1,4 +1,5 @@
 #include <cppa/image.hpp>
+#include <numeric>
 
 /**
  * \brief First version template
