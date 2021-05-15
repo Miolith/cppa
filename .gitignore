@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Trash
+.idea
+cmake-build-debug
+cmake-build-release
+Google_tests
