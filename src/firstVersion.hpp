@@ -1,4 +1,5 @@
 #include <cppa/image.hpp>
+#include <iterator>
 #include <numeric>
 
 /**
@@ -34,9 +35,9 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
         {
             int chunk_size = std::min(rem, alpha);
             std::partial_sum(
-                    in(chunk_start, zero),
-                    in(chunk_start, chunk_size),
-                    g(chunk_start, zero),
+                    &in(chunk_start, zero),
+                    &in(chunk_start + chunk_size, zero),
+                    &g(chunk_start, zero),
                     /* /!\ They may use the pointer arithmetic
                      * for those parameters in the implementation
                      * from the subject.
@@ -54,9 +55,9 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
         {
             int chunk_size = std::min(alpha, rem);
             std::partial_sum(
-                    in(chunk_start, chunk_size), // /!\ RIP
-                    in(chunk_start, zero),
-                    h(chunk_start, chunk_size),
+                    std::make_reverse_iterator(&in(chunk_start + chunk_size, zero)), // /!\ RIP
+                    std::make_reverse_iterator(&in(chunk_start, zero)),
+                    std::make_reverse_iterator(&h(chunk_start + chunk_size, zero)),
                     /* /!\ They may use the pointer arithmetic
                      * for those parameters in the implementation
                      * from the subject.
