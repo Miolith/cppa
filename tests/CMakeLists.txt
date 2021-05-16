@@ -16,4 +16,4 @@ function (cppa_add_test test_name)
     add_dependencies(build-tests ${test_name})
 endfunction()
 
-cppa_add_test(test_dummy)
+cppa_add_test(test_lol)
