@@ -15,13 +15,13 @@
 template <class T, class BinaryOperation>
 void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
 {
-    auto      n     = in.width();
-    const int alpha = 2 * k + 1;
+  auto      n     = in.width();
+  const int alpha = 2 * k + 1;
 
-    if (n == 0)
-      return;
-  
-    for (int x = 0; x < in.height(); x++)
+  if (n == 0)
+    return;
+
+  for (int x = 0; x < in.height(); x++)
   {
 
 
@@ -73,12 +73,14 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
     {
       for (int i = 0; i < n; i++)
       {
-          if (i - k >= 0 && i + k < n)
-            out(i, x) = sup(h[i - k], g[i + k]);
-          else if (i - k < 0)
-              out(i, x) = g[i + k];
-          else
-              out(i, x) = h[i - k];
+        if (i - k >= 0 && i + k < n)
+          out(i, x) = sup(h[i - k], g[i + k]);
+        else if (i - k < 0 && i + k < n)
+          out(i, x) = g[i + k];
+        else if (i - k >= 0 && i + k >= n) 
+          out(i, x) = h[i - k];
+        else
+          out(i, x) = sup(h[i], g[i]);
       }
     }
 

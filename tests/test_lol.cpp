@@ -1,3 +1,4 @@
+#include <bits/stdint-uintn.h>
 #include <cppa/image.hpp>
 #include <algorithm>
 #include <fstream>
@@ -27,8 +28,12 @@ void print(image2d<uint8_t> in, std::string file) {
     s.close();
 }
 
-int max(int a, int b) {
+uint8_t max(uint8_t a, uint8_t b) {
     return a < b ? b : a;
+}
+
+uint8_t min(uint8_t a, uint8_t b) {
+    return a > b ? b : a;
 }
 
 TEST(CPPA, test_lol) {
@@ -49,9 +54,7 @@ TEST(CPPA, test_simple_dilate) {
      *  7  8  8
      */
     
-    print(in, "input");
     dilate1d(in, out, 1, max, (uint8_t)0);
-    print(out, "output"); 
     ASSERT_EQ(out(0, 0), 1);
     ASSERT_EQ(out(1, 0), 2);
     ASSERT_EQ(out(2, 0), 2);
@@ -59,6 +62,57 @@ TEST(CPPA, test_simple_dilate) {
     ASSERT_EQ(out(1, 1), 5);
     ASSERT_EQ(out(2, 1), 5);
     ASSERT_EQ(out(0, 2), 7);
+    ASSERT_EQ(out(1, 2), 8);
+    ASSERT_EQ(out(2, 2), 8);
+}
+
+TEST(CPPA, test_simple_erosion) {
+    auto in = generate_iota(3, 3);
+    image2d<uint8_t> out(3, 3);
+
+    /*  0  1  2  = out before
+     *  3  4  5
+     *  6  7  8
+     */
+    /*  0  0  1  = out after (k = 1)
+     *  3  3  4
+     *  6  6  7
+     */
+    
+    dilate1d(in, out, 1, min, (uint8_t)255);
+    ASSERT_EQ(out(0, 0), 0);
+    ASSERT_EQ(out(1, 0), 0);
+    ASSERT_EQ(out(2, 0), 1);
+    ASSERT_EQ(out(0, 1), 3);
+    ASSERT_EQ(out(1, 1), 3);
+    ASSERT_EQ(out(2, 1), 4);
+    ASSERT_EQ(out(0, 2), 6);
+    ASSERT_EQ(out(1, 2), 6);
+    ASSERT_EQ(out(2, 2), 7);
+}
+
+TEST(CPPA, test_dilate_big_k) {
+    auto in = generate_iota(3, 3);
+    image2d<uint8_t> out(3, 3);
+
+    /*  0  1  2  = out before
+     *  3  4  5
+     *  6  7  8
+     */
+    /*  2  2  2  = out after (k = 4)
+     *  5  5  5
+     *  8  8  8
+     */
+    
+    dilate1d(in, out, 4, max, (uint8_t)0);
+    print(out, "output");
+    ASSERT_EQ(out(0, 0), 2);
+    ASSERT_EQ(out(1, 0), 2);
+    ASSERT_EQ(out(2, 0), 2);
+    ASSERT_EQ(out(0, 1), 5);
+    ASSERT_EQ(out(1, 1), 5);
+    ASSERT_EQ(out(2, 1), 5);
+    ASSERT_EQ(out(0, 2), 8);
     ASSERT_EQ(out(1, 2), 8);
     ASSERT_EQ(out(2, 2), 8);
 }
