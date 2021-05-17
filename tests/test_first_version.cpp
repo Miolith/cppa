@@ -1,5 +1,6 @@
 #include <bits/stdint-uintn.h>
 #include <cppa/image.hpp>
+#include <cppa/mystd.hpp>
 #include <algorithm>
 #include <fstream>
 #include <gtest/gtest.h>
@@ -28,13 +29,6 @@ void print(image2d<uint8_t> in, std::string file) {
     s.close();
 }
 
-uint8_t max(uint8_t a, uint8_t b) {
-    return a < b ? b : a;
-}
-
-uint8_t min(uint8_t a, uint8_t b) {
-    return a > b ? b : a;
-}
 
 TEST(CPPA, test_lol) {
     auto f = generate_iota(10, 10);
@@ -54,7 +48,7 @@ TEST(CPPA, test_simple_dilate) {
      *  7  8  8
      */
     
-    dilate1d(in, out, 1, max, (uint8_t)0);
+    dilate1d(in, out, 1, max<uint8_t>, (uint8_t)0);
     ASSERT_EQ(out(0, 0), 1);
     ASSERT_EQ(out(1, 0), 2);
     ASSERT_EQ(out(2, 0), 2);
@@ -79,7 +73,7 @@ TEST(CPPA, test_simple_erosion) {
      *  6  6  7
      */
     
-    dilate1d(in, out, 1, min, (uint8_t)255);
+    dilate1d(in, out, 1, min<uint8_t>, (uint8_t)255);
     ASSERT_EQ(out(0, 0), 0);
     ASSERT_EQ(out(1, 0), 0);
     ASSERT_EQ(out(2, 0), 1);
@@ -104,7 +98,7 @@ TEST(CPPA, test_dilate_big_k) {
      *  8  8  8
      */
     
-    dilate1d(in, out, 4, max, (uint8_t)0);
+    dilate1d(in, out, 4, max<uint8_t>, (uint8_t)0);
     print(out, "output");
     ASSERT_EQ(out(0, 0), 2);
     ASSERT_EQ(out(1, 0), 2);
