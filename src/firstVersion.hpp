@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cppa/image.hpp>
 #include <iterator>
 #include <numeric>
@@ -14,29 +15,32 @@
 template <class T, class BinaryOperation>
 void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
 {
-  for (int x = 0; x < in.width(); x++)
-  {
-    auto      n     = in.width() * x + in.width();
+    auto      n     = in.width();
     const int alpha = 2 * k + 1;
 
     if (n == 0)
       return;
+  
+    for (int x = 0; x < in.height(); x++)
+  {
 
 
     // Temporary images to store results
-    image2d<T> g(in.width(), 1);
-    image2d<T> h(in.width(), 1);
+    auto h = new T[n];
+    auto g = new T[n];
+
+    std::fill_n(h, n, zero);
 
     // Forward pass
     // Compute g[x] = Max f(y), y ∈ [α * ⌊x / α⌋ : x]
     {
-      int chunk_start = x * in.width();
+      int chunk_start = 0;
       int rem         = n;
 
-      for (; rem > x * in.width(); chunk_start += alpha, rem -= alpha)
+      for (; rem > 0; chunk_start += alpha, rem -= alpha)
       {
         int chunk_size = std::min(rem, alpha);
-        std::partial_sum(&in(chunk_start, zero), &in(chunk_start + chunk_size, zero), &g(chunk_start, zero),
+        std::partial_sum(&in(chunk_start, x), &in(chunk_start + chunk_size, x), g + chunk_start,
                          /* /!\ They may use the pointer arithmetic
                           * for those parameters in the implementation
                           * from the subject.
@@ -47,15 +51,15 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
     // Backward pass
     // Compute h[x] = Max f(y) y ∈ [x : α * (⌊x/α⌋+1))
     {
-      int chunk_start = x * in.width();
+      int chunk_start = 0;
       int rem         = n;
 
-      for (; rem > x * in.width(); chunk_start += alpha, rem -= alpha)
+      for (; rem > 0; chunk_start += alpha, rem -= alpha)
       {
         int chunk_size = std::min(alpha, rem);
-        std::partial_sum(std::make_reverse_iterator(&in(chunk_start + chunk_size, zero)),
-                         std::make_reverse_iterator(&in(chunk_start, zero)),
-                         std::make_reverse_iterator(&h(chunk_start + chunk_size, zero)),
+        std::partial_sum(std::make_reverse_iterator(&in(chunk_start + chunk_size, x)),
+                         std::make_reverse_iterator(&in(chunk_start, x)),
+                         std::make_reverse_iterator(h + chunk_start + chunk_size),
                          /* /!\ They may use the pointer arithmetic
                           * for those parameters in the implementation
                           * from the subject.
@@ -67,11 +71,18 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
     // out[x] = Max   (Max f[x-k:b],  Max f[b:x+k]) with b = α.⌈(x-k)/α⌉ = α.⌊(x+k)/α⌋
     //        = Max( h[x-k], g[x+k] )
     {
-      for (int i = x * in.width(); i < n; i++)
+      for (int i = 0; i < n; i++)
       {
-          //if (i - k >= x * in.width() && i + k < n)
-            out(i, zero) = sup(h(i - k, zero), g(i + k, zero));
+          if (i - k >= 0 && i + k < n)
+            out(i, x) = sup(h[i - k], g[i + k]);
+          else if (i - k < 0)
+              out(i, x) = g[i + k];
+          else
+              out(i, x) = h[i - k];
       }
     }
+
+    delete[] g;
+    delete[] h;
   }
 }

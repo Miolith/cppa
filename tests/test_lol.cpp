@@ -5,8 +5,8 @@
 #include "../src/firstVersion.hpp"
 
 
-image2d<int> generate_iota(int w, int h) {
-    image2d<int> f(w, h);
+image2d<uint8_t> generate_iota(int w, int h) {
+    image2d<uint8_t> f(w, h);
 
     for (int y = 0; y < h; ++y)
         for (int x = 0; x < w; ++x)
@@ -15,12 +15,12 @@ image2d<int> generate_iota(int w, int h) {
     return f;
 }
 
-void print(image2d<int> in, std::string file) {
+void print(image2d<uint8_t> in, std::string file) {
     std::ofstream s(file);
 
     for (int i = 0; i < in.height(); ++i) {
         for (int j = 0; j < in.width(); ++j) {
-            s << in(j, i) << ' ';
+            s << (int)in(j, i) << ' ';
         }
         s << std::endl;
     }
@@ -38,7 +38,7 @@ TEST(CPPA, test_lol) {
 
 TEST(CPPA, test_simple_dilate) {
     auto in = generate_iota(3, 3);
-    image2d<int> out(3, 3);
+    image2d<uint8_t> out(3, 3);
 
     /*  0  1  2  = out before
      *  3  4  5
@@ -50,12 +50,12 @@ TEST(CPPA, test_simple_dilate) {
      */
     
     print(in, "input");
-    dilate1d(in, out, 1, max, 0);
+    dilate1d(in, out, 1, max, (uint8_t)0);
     print(out, "output"); 
     ASSERT_EQ(out(0, 0), 1);
     ASSERT_EQ(out(1, 0), 2);
     ASSERT_EQ(out(2, 0), 2);
-    ASSERT_EQ(out(0, 1), 3);
+    ASSERT_EQ(out(0, 1), 4);
     ASSERT_EQ(out(1, 1), 5);
     ASSERT_EQ(out(2, 1), 5);
     ASSERT_EQ(out(0, 2), 7);
