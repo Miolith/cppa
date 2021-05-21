@@ -4,17 +4,13 @@
 #include <algorithm>
 #include <fstream>
 #include <gtest/gtest.h>
-#include "../src/secondVersion.hpp"
+#include "../src/thirdVersion.hpp"
 #include "testUtility.hpp"
 
-TEST(CPPA, test_lol) {
-    auto f = generate_iota<uint8_t>(10, 10);
-    ASSERT_EQ(f(5, 5), 55);
-}
 
 TEST(CPPA, test_simple_dilate) {
-    auto in = generate_iota<uint8_t>(3, 3);
-    image2d<uint8_t> out(3, 3);
+    auto in = generate_iota<int8_t>(3, 3);
+    image2d<int8_t> out(3, 3);
 
     /*  0  1  2  = out before
      *  3  4  5

@@ -18,3 +18,4 @@ endfunction()
 
 cppa_add_test(test_first_version)
 cppa_add_test(test_second_version)
+cppa_add_test(test_third_version)
