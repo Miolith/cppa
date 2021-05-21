@@ -2,11 +2,11 @@
 #include <algorithm>
 #include <bits/stdint-uintn.h>
 #include <cfloat>
+#include <cmath>
 #include <cppa/image.hpp>
 #include <cppa/mystd.hpp>
 #include <fstream>
 #include <gtest/gtest.h>
-
 
 template <typename T>
 image2d<T> generate_iota(int w, int h)
@@ -143,7 +143,7 @@ TEST(CPPA, test_erosion_float64)
    */
 
   dilate1d(in, out, 2, min<double>, DBL_MAX);
-  double expected[] = {0,0,0,3,3,3,6,6,6};
+  double expected[] = {0, 0, 0, 3, 3, 3, 6, 6, 6};
   ASSERT_EQ_ARRAY(expected, out);
 }
 
@@ -158,8 +158,55 @@ TEST(CPPA, test_dilate_bigger_size)
   /*  2  3  4  5  6  7  7  7 = out after (k = 2)
    *  10 11 12 13 14 15 15 15
    */
-    
+
   dilate1d(in, out, 2, max<double>, (double)0);
-  double expected[] = {2,3,4,5,6,7,7,7,10,11,12,13,14,15,15,15};
+  double expected[] = {2, 3, 4, 5, 6, 7, 7, 7, 10, 11, 12, 13, 14, 15, 15, 15};
+  ASSERT_EQ_ARRAY(expected, out);
+}
+
+TEST(CPPA, test_erosion_bigger_size)
+{
+  auto            in = generate_iota<double>(8, 2);
+  image2d<double> out(8, 2);
+
+  /*  0  1  2  3  4  5  6  7  = out before
+   *  8  9  10 11 12 13 14 15
+   */
+  /*  0  0  0  1  2  3  4  5 = out after (k = 2)
+   *  8  8  8  9  10 11 12 13
+   */
+
+  dilate1d(in, out, 2, min<double>, (double)DBL_MAX);
+  double expected[] = {0, 0, 0, 1, 2, 3, 4, 5, 8, 8, 8, 9, 10, 11, 12, 13};
+  ASSERT_EQ_ARRAY(expected, out);
+}
+
+TEST(CPPA, test_erosion_random_val)
+{
+  auto            in = generate_iota<double>(4, 5);
+  image2d<double> out(4, 5);
+
+  double tab[] = {984.654, 68.78, 654.0,   18.7, 147893, 8334, 7887, 478986, 0, 0,
+                  1,       0,     sqrt(2), 1.4,  1.5,    1.4,  5,    4,      3, 2};
+  for (int i = 0; i < 20; i++)
+    in(i, 0) = tab[i];
+
+  /* 984.654 68.78 654.0 18.7
+   * 147893 8334 7887 478986
+   * 0 0 1 0
+   * sqrt(2) 1.4 1.5 1.4
+   * 5 4 3 2
+   */
+
+  /* 18.7 18.7 18.7 18.7 (k = 3)
+   * 7887 7887 7887 7887
+   * 0 0 0 0
+   * 1.4 1.4 1.4 1.4
+   * 2 2 2 2
+   */
+
+  dilate1d(in, out, 3, min<double>, (double)DBL_MAX);
+  double expected[] = {18.7,18.7,18.7,18.7, 7887, 7887, 7887, 7887, 0, 0, 0, 0, 1.4, 1.4, 1.4, 1.4, 2, 2, 2, 2};
+
   ASSERT_EQ_ARRAY(expected, out);
 }
