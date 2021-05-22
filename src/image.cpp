@@ -11,5 +11,3 @@ image2d_any::image2d_any(int width, int height, std::size_t size, pixel_format_t
   m_pitch  = width * size;
   m_dtype  = dtype;
 }
-
-

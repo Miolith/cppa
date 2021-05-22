@@ -1,4 +1,5 @@
 #include "../src/firstVersion.hpp"
+#include "testUtility.hpp"
 #include <algorithm>
 #include <bits/stdint-uintn.h>
 #include <cfloat>
@@ -7,7 +8,6 @@
 #include <cppa/mystd.hpp>
 #include <fstream>
 #include <gtest/gtest.h>
-#include "testUtility.hpp"
 
 
 template <typename T>
@@ -179,7 +179,7 @@ TEST(CPPA, test_erosion_random_val)
    */
 
   dilate1d(in, out, 3, min<double>, (double)DBL_MAX);
-  double expected[] = {18.7,18.7,18.7,18.7, 7887, 7887, 7887, 7887, 0, 0, 0, 0, 1.4, 1.4, 1.4, 1.4, 2, 2, 2, 2};
+  double expected[] = {18.7, 18.7, 18.7, 18.7, 7887, 7887, 7887, 7887, 0, 0, 0, 0, 1.4, 1.4, 1.4, 1.4, 2, 2, 2, 2};
 
   ASSERT_EQ_ARRAY(expected, out);
 }

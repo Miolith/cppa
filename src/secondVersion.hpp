@@ -1,9 +1,9 @@
 #include "cppa/image.hpp"
 #include "firstVersion.hpp"
 #include <bits/stdint-uintn.h>
+#include <cassert>
 #include <cfloat>
 #include <cppa/mystd.hpp>
-#include <cassert>
 
 void dilate1d(image2d_any in, image2d_any out, int k, bool decreasing)
 {

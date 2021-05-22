@@ -1,6 +1,6 @@
-#include <cppa/image.hpp>
 #include "../src/secondVersion.hpp"
 #include <benchmark/benchmark.h>
+#include <cppa/image.hpp>
 
 
 void myiota(image2d<int> out)
@@ -10,7 +10,7 @@ void myiota(image2d<int> out)
 
   for (int y = 0; y < h; ++y)
     for (int x = 0; x < w; ++x)
-      out(x,y) = w * y + x;
+      out(x, y) = w * y + x;
 }
 
 
@@ -26,7 +26,7 @@ static void BM_FirstVersion_int32(benchmark::State& state)
   }
   state.SetBytesProcessed(int64_t(state.iterations()) * int64_t(n * n));
 }
-BENCHMARK(BM_FirstVersion_int32)->Arg(8)->Arg(64)->Arg(512)->Arg(1<<10)->Arg(1<<11);
+BENCHMARK(BM_FirstVersion_int32)->Arg(8)->Arg(64)->Arg(512)->Arg(1 << 10)->Arg(1 << 11);
 
 // Write your benchmarks below following the same model as above
 // You can check the documentation for more details

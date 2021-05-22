@@ -1,9 +1,9 @@
 #include <algorithm>
+#include <cassert>
 #include <cppa/image.hpp>
 #include <fstream>
 #include <iterator>
 #include <numeric>
-#include <cassert>
 
 /**
  * \brief First version template
@@ -39,8 +39,7 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
       for (; rem > 0; chunk_start += alpha, rem -= alpha)
       {
         int chunk_size = std::min(rem, alpha);
-        std::partial_sum(&in(chunk_start, x), &in(chunk_start + chunk_size, x), g + chunk_start,
-                         sup);
+        std::partial_sum(&in(chunk_start, x), &in(chunk_start + chunk_size, x), g + chunk_start, sup);
       }
     }
 
@@ -54,8 +53,7 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
         int chunk_size = std::min(alpha, rem);
         std::partial_sum(std::make_reverse_iterator(&in(chunk_start + chunk_size, x)),
                          std::make_reverse_iterator(&in(chunk_start, x)),
-                         std::make_reverse_iterator(h + chunk_start + chunk_size),
-                         sup);
+                         std::make_reverse_iterator(h + chunk_start + chunk_size), sup);
       }
     }
 
@@ -67,7 +65,7 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
           out(i, x) = sup(h[i - k], g[i + k]);
         else if (i - k < 0 && i + k < n)
           out(i, x) = sup(g[i + k], g[i]);
-        else if (i - k >= 0 && i + k >= n) 
+        else if (i - k >= 0 && i + k >= n)
           out(i, x) = sup(h[i - k], h[i]);
         else
           out(i, x) = sup(h[i], g[i]);
