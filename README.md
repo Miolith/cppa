@@ -17,7 +17,7 @@ Pour lancer les tests :
 ```
 make test
 ```
-Pour lancer le benchmark :
+Pour lancer les benchmarks :
 ```
 make bench
 ```
