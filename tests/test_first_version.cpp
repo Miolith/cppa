@@ -10,13 +10,7 @@
 #include <gtest/gtest.h>
 
 
-template <typename T>
-void ASSERT_EQ_ARRAY(T* expected, image2d<T> got)
-{
-  for (int x = 0; x < got.width(); x++)
-    for (int y = 0; y < got.height(); y++)
-      ASSERT_EQ(expected[y * got.width() + x], got(x, y));
-}
+
 
 
 TEST(CPPA, test_lol)
