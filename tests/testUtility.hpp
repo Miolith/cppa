@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cppa/image.hpp>
+#include <fstream>
+
 template <typename T>
 image2d<T> generate_iota(int w, int h)
 {
@@ -21,9 +24,7 @@ void print(image2d<T> in, std::string file)
   for (int i = 0; i < in.height(); ++i)
   {
     for (int j = 0; j < in.width(); ++j)
-    {
       s << in(j, i) << ' ';
-    }
     s << std::endl;
   }
   s.close();
