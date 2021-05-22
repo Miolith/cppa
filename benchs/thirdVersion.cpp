@@ -1,7 +1,7 @@
 #include "../src/thirdVersion.hpp"
+#include "benchUtility.hpp"
 #include <benchmark/benchmark.h>
 #include <cppa/image.hpp>
-#include "benchUtility.hpp"
 
 static void BM_int32(benchmark::State& state)
 {

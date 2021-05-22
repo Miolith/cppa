@@ -223,7 +223,7 @@ auto min_uint16(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
   x.cmovbe(x86::eax, x86::esi);
   x.ret();
 
-  unsigned short (*fn)(unsigned short , unsigned short);
+  unsigned short (*fn)(unsigned short, unsigned short);
   rt.add(&fn, &code);
 
   return fn;

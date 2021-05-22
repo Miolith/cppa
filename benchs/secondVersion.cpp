@@ -1,7 +1,7 @@
 #include "../src/secondVersion.hpp"
+#include "benchUtility.hpp"
 #include <benchmark/benchmark.h>
 #include <cppa/image.hpp>
-#include "benchUtility.hpp"
 
 static void BM_SecondVersion_int32(benchmark::State& state)
 {

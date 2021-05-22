@@ -7,12 +7,6 @@
 #include <fstream>
 #include <gtest/gtest.h>
 
-TEST(CPPA, test_lol)
-{
-  auto f = generate_iota<uint8_t>(10, 10);
-  ASSERT_EQ(f(5, 5), 55);
-}
-
 TEST(CPPA, test_simple_dilate)
 {
   auto             in = generate_iota<uint8_t>(3, 3);
