@@ -12,5 +12,12 @@ L’objectif de ce projet est d’apporter une solutionJIT logicielle avec ASMJi
 $ mkdir build && cd build
 $ conan install .. -s compiler.cppstd=20 -s compiler.libcxx=libstdc++11
 $ cmake ..
-$ make test/bench
+```
+Pour lancer les tests :
+```
+make test
+```
+Pour lancer le benchmark :
+```
+make bench
 ```
