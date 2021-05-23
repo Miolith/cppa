@@ -1,5 +1,5 @@
 #pragma once
-
+#include <gtest/gtest.h>
 #include <cppa/image.hpp>
 #include <fstream>
 
