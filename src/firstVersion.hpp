@@ -23,13 +23,12 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
 
   if (n == 0 || zero < 0)
     return;
-
+  // Temporary images to store results
+  T* h = new T[n];
+  T* g = new T[n];
   for (int x = 0; x < in.height(); x++)
   {
 
-    // Temporary images to store results
-    T* h = new T[n];
-    T* g = new T[n];
 
     // Forward pass
     {
@@ -71,8 +70,7 @@ void dilate1d(image2d<T> in, image2d<T> out, int k, BinaryOperation sup, T zero)
           out(i, x) = sup(h[i], g[i]);
       }
     }
-
-    delete[] g;
-    delete[] h;
   }
+  delete[] g;
+  delete[] h;
 }
