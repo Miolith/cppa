@@ -6,281 +6,296 @@
 
 using namespace asmjit;
 
-auto max_int8(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
+struct StdJit
 {
 
-  x.cmp(x86::sil, x86::dil);
-  x.mov(x86::eax, x86::edi);
-  x.cmovge(x86::eax, x86::esi);
-  x.ret();
+  JitRuntime&     rt;
+  CodeHolder&     code;
+  x86::Assembler& x;
 
-  char (*fn)(char, char);
-  rt.add(&fn, &code);
+  StdJit(JitRuntime& rt_, CodeHolder& code_, x86::Assembler& x_)
+    : rt(rt_)
+    , code(code_)
+    , x(x_)
+  {
+  }
 
-  return fn;
-}
+  auto max_int8()
+  {
 
-auto max_int16(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::sil, x86::dil);
+    x.mov(x86::eax, x86::edi);
+    x.cmovge(x86::eax, x86::esi);
+    x.ret();
 
-  x.cmp(x86::si, x86::di);
-  x.mov(x86::eax, x86::edi);
-  x.cmovge(x86::eax, x86::esi);
-  x.ret();
+    char (*fn)(char, char);
+    rt.add(&fn, &code);
 
-  short (*fn)(short, short);
-  rt.add(&fn, &code);
-  return fn;
-}
+    return fn;
+  }
 
-auto max_int32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+  auto max_int16()
+  {
 
-  x.cmp(x86::edi, x86::esi);
-  x.mov(x86::eax, x86::esi);
-  x.cmovge(x86::eax, x86::edi);
-  x.ret();
+    x.cmp(x86::si, x86::di);
+    x.mov(x86::eax, x86::edi);
+    x.cmovge(x86::eax, x86::esi);
+    x.ret();
 
-  int (*fn)(int a, int b);
-  rt.add(&fn, &code);
+    short (*fn)(short, short);
+    rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto max_int32()
+  {
 
-auto max_int64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
-  x.cmp(x86::rdi, x86::rsi);
-  x.mov(x86::rax, x86::rsi);
-  x.cmovge(x86::rax, x86::rdi);
-  x.ret();
+    x.cmp(x86::edi, x86::esi);
+    x.mov(x86::eax, x86::esi);
+    x.cmovge(x86::eax, x86::edi);
+    x.ret();
 
-  long (*fn)(long, long);
-  rt.add(&fn, &code);
+    int (*fn)(int a, int b);
+    rt.add(&fn, &code);
 
-  return fn;
-}
+    return fn;
+  }
 
-auto max_uint8(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
-  x.cmp(x86::sil, x86::dil);
-  x.mov(x86::eax, x86::edi);
-  x.cmovnb(x86::eax, x86::esi);
-  x.ret();
+  auto max_int64()
+  {
+    x.cmp(x86::rdi, x86::rsi);
+    x.mov(x86::rax, x86::rsi);
+    x.cmovge(x86::rax, x86::rdi);
+    x.ret();
 
-  unsigned char (*fn)(unsigned char, unsigned char);
-  rt.add(&fn, &code);
+    long (*fn)(long, long);
+    rt.add(&fn, &code);
 
-  return fn;
-}
+    return fn;
+  }
 
-auto max_uint16(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+  auto max_uint8()
+  {
+    x.cmp(x86::sil, x86::dil);
+    x.mov(x86::eax, x86::edi);
+    x.cmovnb(x86::eax, x86::esi);
+    x.ret();
 
-  x.cmp(x86::si, x86::di);
-  x.mov(x86::eax, x86::edi);
-  x.cmovnb(x86::eax, x86::esi);
-  x.ret();
+    unsigned char (*fn)(unsigned char, unsigned char);
+    rt.add(&fn, &code);
 
-  unsigned short (*fn)(unsigned short, unsigned short);
-  rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto max_uint16()
+  {
 
-auto max_uint32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::si, x86::di);
+    x.mov(x86::eax, x86::edi);
+    x.cmovnb(x86::eax, x86::esi);
+    x.ret();
 
+    unsigned short (*fn)(unsigned short, unsigned short);
+    rt.add(&fn, &code);
 
-  x.cmp(x86::edi, x86::esi);
-  x.mov(x86::eax, x86::esi);
-  x.cmovnb(x86::eax, x86::edi);
-  x.ret();
+    return fn;
+  }
 
-  unsigned int (*fn)(unsigned int, unsigned int);
-  rt.add(&fn, &code);
+  auto max_uint32()
+  {
 
-  return fn;
-}
 
-auto max_uint64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::edi, x86::esi);
+    x.mov(x86::eax, x86::esi);
+    x.cmovnb(x86::eax, x86::edi);
+    x.ret();
 
+    unsigned int (*fn)(unsigned int, unsigned int);
+    rt.add(&fn, &code);
 
-  x.cmp(x86::rdi, x86::rsi);
-  x.mov(x86::rax, x86::rsi);
-  x.cmovnb(x86::rax, x86::rdi);
-  x.ret();
+    return fn;
+  }
 
-  unsigned long (*fn)(unsigned long, unsigned long);
-  rt.add(&fn, &code);
+  auto max_uint64()
+  {
 
-  return fn;
-}
 
-auto max_float32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::rdi, x86::rsi);
+    x.mov(x86::rax, x86::rsi);
+    x.cmovnb(x86::rax, x86::rdi);
+    x.ret();
 
+    unsigned long (*fn)(unsigned long, unsigned long);
+    rt.add(&fn, &code);
 
-  x.maxss(x86::xmm1, x86::xmm0);
-  x.movaps(x86::xmm0, x86::xmm1);
-  x.ret();
+    return fn;
+  }
 
-  float (*fn)(float, float);
-  rt.add(&fn, &code);
+  auto max_float32()
+  {
 
-  return fn;
-}
 
-auto max_float64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.maxss(x86::xmm1, x86::xmm0);
+    x.movaps(x86::xmm0, x86::xmm1);
+    x.ret();
 
+    float (*fn)(float, float);
+    rt.add(&fn, &code);
 
-  x.maxsd(x86::xmm1, x86::xmm0);
-  x.movapd(x86::xmm0, x86::xmm1);
-  x.ret();
+    return fn;
+  }
 
-  double (*fn)(double, double);
-  rt.add(&fn, &code);
+  auto max_float64()
+  {
 
-  return fn;
-}
 
-/****** MIN *******/
+    x.maxsd(x86::xmm1, x86::xmm0);
+    x.movapd(x86::xmm0, x86::xmm1);
+    x.ret();
 
+    double (*fn)(double, double);
+    rt.add(&fn, &code);
 
-auto min_int8(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    return fn;
+  }
 
-  x.cmp(x86::sil, x86::dil);
-  x.mov(x86::eax, x86::edi);
-  x.cmovle(x86::eax, x86::esi);
-  x.ret();
+  /****** MIN *******/
 
-  char (*fn)(char, char);
-  rt.add(&fn, &code);
 
-  return fn;
-}
+  auto min_int8()
+  {
 
-auto min_int16(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::sil, x86::dil);
+    x.mov(x86::eax, x86::edi);
+    x.cmovle(x86::eax, x86::esi);
+    x.ret();
 
-  x.cmp(x86::si, x86::di);
-  x.mov(x86::eax, x86::edi);
-  x.cmovle(x86::eax, x86::esi);
-  x.ret();
+    char (*fn)(char, char);
+    rt.add(&fn, &code);
 
-  short (*fn)(short, short);
-  rt.add(&fn, &code);
-  return fn;
-}
+    return fn;
+  }
 
-auto min_int32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+  auto min_int16()
+  {
 
-  x.cmp(x86::edi, x86::esi);
-  x.mov(x86::eax, x86::esi);
-  x.cmovle(x86::eax, x86::edi);
-  x.ret();
+    x.cmp(x86::si, x86::di);
+    x.mov(x86::eax, x86::edi);
+    x.cmovle(x86::eax, x86::esi);
+    x.ret();
 
-  int (*fn)(int a, int b);
-  rt.add(&fn, &code);
+    short (*fn)(short, short);
+    rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto min_int32()
+  {
 
-auto min_int64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
-  x.cmp(x86::rdi, x86::rsi);
-  x.mov(x86::rax, x86::rsi);
-  x.cmovle(x86::rax, x86::rdi);
-  x.ret();
+    x.cmp(x86::edi, x86::esi);
+    x.mov(x86::eax, x86::esi);
+    x.cmovle(x86::eax, x86::edi);
+    x.ret();
 
-  long (*fn)(long, long);
-  rt.add(&fn, &code);
+    int (*fn)(int a, int b);
+    rt.add(&fn, &code);
 
-  return fn;
-}
+    return fn;
+  }
 
-auto min_uint8(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
-  x.cmp(x86::sil, x86::dil);
-  x.mov(x86::eax, x86::edi);
-  x.cmovbe(x86::eax, x86::esi);
-  x.ret();
+  auto min_int64()
+  {
+    x.cmp(x86::rdi, x86::rsi);
+    x.mov(x86::rax, x86::rsi);
+    x.cmovle(x86::rax, x86::rdi);
+    x.ret();
 
-  unsigned char (*fn)(unsigned char, unsigned char);
-  rt.add(&fn, &code);
+    long (*fn)(long, long);
+    rt.add(&fn, &code);
 
-  return fn;
-}
+    return fn;
+  }
 
-auto min_uint16(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+  auto min_uint8()
+  {
+    x.cmp(x86::sil, x86::dil);
+    x.mov(x86::eax, x86::edi);
+    x.cmovbe(x86::eax, x86::esi);
+    x.ret();
 
-  x.cmp(x86::si, x86::di);
-  x.mov(x86::eax, x86::edi);
-  x.cmovbe(x86::eax, x86::esi);
-  x.ret();
+    unsigned char (*fn)(unsigned char, unsigned char);
+    rt.add(&fn, &code);
 
-  unsigned short (*fn)(unsigned short, unsigned short);
-  rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto min_uint16()
+  {
 
-auto min_uint32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::si, x86::di);
+    x.mov(x86::eax, x86::edi);
+    x.cmovbe(x86::eax, x86::esi);
+    x.ret();
 
-  x.cmp(x86::edi, x86::esi);
-  x.mov(x86::eax, x86::esi);
-  x.cmovbe(x86::eax, x86::edi);
-  x.ret();
+    unsigned short (*fn)(unsigned short, unsigned short);
+    rt.add(&fn, &code);
 
-  unsigned int (*fn)(unsigned int, unsigned int);
-  rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto min_uint32()
+  {
 
-auto min_uint64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::edi, x86::esi);
+    x.mov(x86::eax, x86::esi);
+    x.cmovbe(x86::eax, x86::edi);
+    x.ret();
 
-  x.cmp(x86::rdi, x86::rsi);
-  x.mov(x86::rax, x86::rsi);
-  x.cmovbe(x86::rax, x86::rdi);
-  x.ret();
+    unsigned int (*fn)(unsigned int, unsigned int);
+    rt.add(&fn, &code);
 
-  unsigned long (*fn)(unsigned long, unsigned long);
-  rt.add(&fn, &code);
+    return fn;
+  }
 
-  return fn;
-}
+  auto min_uint64()
+  {
 
-auto min_float32(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.cmp(x86::rdi, x86::rsi);
+    x.mov(x86::rax, x86::rsi);
+    x.cmovbe(x86::rax, x86::rdi);
+    x.ret();
 
+    unsigned long (*fn)(unsigned long, unsigned long);
+    rt.add(&fn, &code);
 
-  x.minss(x86::xmm1, x86::xmm0);
-  x.movaps(x86::xmm0, x86::xmm1);
-  x.ret();
+    return fn;
+  }
 
-  float (*fn)(float, float);
-  rt.add(&fn, &code);
+  auto min_float32()
+  {
 
-  return fn;
-}
 
-auto min_float64(JitRuntime& rt, CodeHolder& code, x86::Assembler& x)
-{
+    x.minss(x86::xmm1, x86::xmm0);
+    x.movaps(x86::xmm0, x86::xmm1);
+    x.ret();
 
+    float (*fn)(float, float);
+    rt.add(&fn, &code);
 
-  x.minsd(x86::xmm1, x86::xmm0);
-  x.movapd(x86::xmm0, x86::xmm1);
-  x.ret();
+    return fn;
+  }
 
-  double (*fn)(double, double);
-  rt.add(&fn, &code);
+  auto min_float64()
+  {
 
-  return fn;
-}
+
+    x.minsd(x86::xmm1, x86::xmm0);
+    x.movapd(x86::xmm0, x86::xmm1);
+    x.ret();
+
+    double (*fn)(double, double);
+    rt.add(&fn, &code);
+
+    return fn;
+  }
+};
